@@ -15,14 +15,20 @@ const client = new Client({
   partials: ["CHANNEL"],
 });
 
-//Takes user input of pokemon name and returns info
+//Function that takes user input of pokemon name and returns info
 async function getPokemonByName(name:string){
   const response = await axios.get("https://pokeapi.co/api/v2/pokemon/"+name)
-  //Embed for pokemon card
+  const pokemonColour = await axios.get("https://pokeapi.co/api/v2/pokemon-species/"+response.data.id)
+  console.log(pokemonColour)
+  //Creating discord embed for pokemon card
   const pokemonEmbed = new MessageEmbed()
+  //Setting colour of sidebar to match image
 	.setColor('#0099ff')
+  //Setting title
 	.setTitle(name)
+  //Setting image 
 	.setImage(response.data.sprites.front_default)
+  //Fields which display information
 	.addFields(
 		{ name: 'Weight:', value: (response.data.weight/10).toFixed(1) + 'kg'},
 		{ name: 'Height:', value: (response.data.height/3.048).toFixed(1) + 'ft'},
