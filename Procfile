@@ -1,1 +1,1 @@
-worker: node dist/bot.js
+worker: node --experimental-specifier-resolution=node dist/bot.js
