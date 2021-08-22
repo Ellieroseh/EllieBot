@@ -2,11 +2,13 @@ import mongoose from "mongoose"
 
 interface PokemonsTypes {
     pokemonId: string;
+    ownerId: number;
     pokedexId: number;
     gender: string;
     shiny: boolean;
     height: string;
     weight: string;
+    claimed: boolean;
 }
 
 //Pokemon Schema
@@ -14,6 +16,9 @@ const Pokemons = new mongoose.Schema<PokemonsTypes>(
     {
         "pokemonId": {
           "type": "String"
+        },
+        "ownerId": {
+          "type": "Number"
         },
         "pokedexId": {
           "type": "Number"
@@ -29,7 +34,10 @@ const Pokemons = new mongoose.Schema<PokemonsTypes>(
         },
         "weight": {
           "type": "String"
-        }
+        },
+        "claimed": {
+          "type": "Boolean"
+        },
       },
       
       { timestamps: true }

@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import Users from './schemas/Users';
 import Pokemons from './schemas/Pokemons';
 import MongoDbError from './classes/MongoDbError';
-import { v1 as uuidv1 } from "uuid";
+import { v1 as uuidv1 } from 'uuid';
 
 //initialize discord client
 const client = new Client({
@@ -54,9 +54,49 @@ async function getUserById(uid: number) {
 }
 
 //Function that rolls a random pokemon and returns an embed of it
-async function rollPokemon() {
-	const pokemonId = uuidv1()
-	return await Pokemons.create({pokemonId:pokemonId})
+async function rollPokemon(ownerId: number) {
+	//Generates a unique id for the pokemon in the collection
+	const pokemonId = uuidv1();
+	//RNG for a number inbetween 1-898 for the pokemon
+	const pokedexId = Math.floor(Math.random() * 897 + 1);
+	//Pokemon gender
+	let gender: string;
+	//50% chance male, 50% chance female
+	if (Math.floor(Math.random()) === 1) {
+		gender = 'female';
+	} else {
+		gender = 'male';
+	}
+	//Pokemon shiny
+	let shiny: boolean;
+	//1 in 450 chance that the pokemon is a shiny pokemon
+	if (Math.floor(Math.random() * 449) === 0) {
+		shiny = true;
+	} else {
+		shiny = false;
+	}
+	//Get pokemon by pokedexId
+	const response = await axios.get(
+		'https://pokeapi.co/api/v2/pokemon/' + pokedexId
+	);
+	//Weight multiplier is somewhere inbetween 0.8 and 1.2
+	const weightMultiplier = Math.floor(Math.random() * 120 + 80) / 100;
+	//The weight of the pokemon is somewhere between 20% < average and 20% > average.
+	const weight = response.data.weight * weightMultiplier;
+	//Height multiplier is somewhere inbetween 0.8 and 1.2
+	const heightMultiplier = Math.floor(Math.random() * 120 + 80) / 100;
+	//The height of the pokemon is somewhere between 20% < average and 20% > average.
+	const height = response.data.height * heightMultiplier;
+
+	return await Pokemons.create({
+		pokemonId: pokemonId,
+		pokedexId: pokedexId,
+		ownerId: ownerId,
+		gender: gender,
+		shiny: shiny,
+		weight: weight,
+		height: height,
+	});
 }
 
 //Console log that discord bot connected to discord
@@ -105,9 +145,11 @@ client.on('messageCreate', async (message) => {
 			}
 			if (words[1] === 'roll') {
 				try {
-					
+					await rollPokemon(Number.parseInt(message.author.id));
 				} catch (error) {
-					
+					if (error instanceof MongoDbError) {
+						message.reply(error.message);
+					}
 				}
 			}
 	}
