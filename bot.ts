@@ -180,8 +180,12 @@ async function rollPokemon(ownerId: number) {
 				inline: true,
 			},
 			{
+				name: '\u200B',
+				value: '\u200B',
+			},
+			{
 				name: 'Stats',
-				value: '-->',
+				value: 'Stats for pokemon',
 			},
 			{
 				name: 'HP:',
