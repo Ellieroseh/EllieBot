@@ -30,7 +30,7 @@ async function getPokemonByName(pokemonName: string) {
 		//Setting colour of sidebar to match image
 		.setColor('#f0bf62')
 		//Setting title
-		.setTitle(pokemonName)
+		.setTitle(pokemonName.split('-').join(' '))
 		//Setting image
 		.setImage(response.data.sprites.other['official-artwork'].front_default)
 		//Fields which display information
@@ -144,7 +144,7 @@ async function rollPokemon(ownerId: number) {
 		//Setting colour of sidebar to match image
 		.setColor('#f0bf62')
 		//Setting title
-		.setTitle(response.data.name)
+		.setTitle(response.data.name.split('-').join(' '))
 		//Setting thumbnail image
 		.setThumbnail(pokemonImage)
 		//Fields which display information
