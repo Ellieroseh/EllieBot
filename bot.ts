@@ -166,12 +166,12 @@ async function rollPokemon(ownerId: number) {
 			},
 			{
 				name: 'Weight:',
-				value: weight.toFixed(1) + 'kg',
+				value: (weight / 10).toFixed(1) + 'kg',
 				inline: true,
 			},
 			{
 				name: 'Height:',
-				value: height.toFixed(1) + 'ft',
+				value: (height / 3.048).toFixed(1) + 'ft',
 				inline: true,
 			},
 			{
@@ -217,7 +217,6 @@ async function rollPokemon(ownerId: number) {
 		.setFooter('© EllieBot');
 	return pokemonRollEmbed;
 }
-
 
 //Console log that discord bot connected to discord
 client.once('ready', () => {
