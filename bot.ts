@@ -215,7 +215,6 @@ async function rollPokemon(ownerId: number) {
 			}
 		)
 		.setFooter('© EllieBot');
-	console.log(pokemonRollEmbed)
 	return pokemonRollEmbed;
 }
 
