@@ -181,36 +181,36 @@ async function rollPokemon(ownerId: number) {
 			},
 			{
 				name: 'Stats',
-				value: '',
+				value: '-->',
 			},
 			{
 				name: 'HP:',
-				value: stats[0].hp,
+				value: stats[0].hp.toFixed(0),
 				inline: true,
 			},
 			{
 				name: 'Attack:',
-				value: stats[1].attack,
+				value: stats[1].attack.toFixed(0),
 				inline: true,
 			},
 			{
 				name: 'Defense:',
-				value: stats[2].defense,
+				value: stats[2].defense.toFixed(0),
 				inline: true,
 			},
 			{
 				name: 'Special Attack:',
-				value: stats[3]['special-attack'],
+				value: stats[3]['special-attack'].toFixed(0),
 				inline: true,
 			},
 			{
 				name: 'Special Defence:',
-				value: stats[4]['special-defense'],
+				value: stats[4]['special-defense'].toFixed(0),
 				inline: true,
 			},
 			{
 				name: 'Speed:',
-				value: stats[5].speed,
+				value: stats[5].speed.toFixed(0),
 				inline: true,
 			}
 		)
