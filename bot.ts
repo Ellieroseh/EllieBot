@@ -64,7 +64,7 @@ async function rollPokemon(ownerId: number) {
 	//Pokemon gender
 	let gender: string;
 	//50% chance male, 50% chance female
-	if (Math.floor(Math.random()) === 1) {
+	if (Math.random() > 0.5 ) {
 		gender = 'female';
 	} else {
 		gender = 'male';
