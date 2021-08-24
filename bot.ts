@@ -25,23 +25,69 @@ async function getPokemonByName(pokemonName: string) {
 	const response = await axios.get(
 		'https://pokeapi.co/api/v2/pokemon/' + pokemonName
 	);
+	const temp = await axios.get(
+		'https://pokeapi.co/api/v2/pokemon-species/' + pokemonName
+	);
+	//Getting pokemon type
+	const types = response.data.types.map((element) => {
+		return element.type.name;
+	});
+	//Returning all abilities available for pokemon
+	const abilities = response.data.abilities.map((element) => {
+		return element.ability.name;
+	});
+	//For each loop checking for language
+	/*
+	const flavourText = temp.data.flavor_text_entries.forEach((entry) => {
+		if (entry.language.name === 'en') {
+			console.log(entry.flavor_text.toString())
+			return entry.flavor_text;
+			console.log('pooppyyfarttt') 
+		}
+	});
+	*/
+	var flavourText = '';
+	for (let index = 0; index < temp.data.flavor_text_entries.length; index++) {
+		if (temp.data.flavor_text_entries[index].language.name === 'en') {
+			flavourText = temp.data.flavor_text_entries[index].flavor_text.replaceAll("\n",  " ");
+			break;
+		}
+	}
 	//Creating discord embed for pokemon card
 	const pokemonInfoEmbed = new MessageEmbed()
 		//Setting colour of sidebar to match image
 		.setColor('#f0bf62')
 		//Setting title
 		.setTitle(pokemonName.split('-').join(' '))
+		//Setting description to pokemon flavour text
+		.setDescription(flavourText.toString().replace('\f', ' '))
 		//Setting image
 		.setImage(response.data.sprites.other['official-artwork'].front_default)
 		//Fields which display information
 		.addFields(
 			{
+				name: 'Type(s): ',
+				value: types.join(', '),
+				inline: true,
+			},
+			{
+				name: 'Abilities',
+				value: abilities.join(', '),
+				inline: true,
+			},
+			{
+				name: '\u200B',
+				value: '\u200B',
+			},
+			{
 				name: 'Average weight:',
 				value: (response.data.weight / 10).toFixed(1) + 'kg',
+				inline: true,
 			},
 			{
 				name: 'Average height:',
 				value: (response.data.height / 3.048).toFixed(1) + 'ft',
+				inline: true,
 			}
 		)
 		.setFooter('© EllieBot');
@@ -64,7 +110,7 @@ async function rollPokemon(ownerId: number) {
 	//Pokemon gender
 	let gender: string;
 	//50% chance male, 50% chance female
-	if (Math.random() > 0.5 ) {
+	if (Math.random() > 0.5) {
 		gender = 'female';
 	} else {
 		gender = 'male';
