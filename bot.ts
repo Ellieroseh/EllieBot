@@ -36,16 +36,7 @@ async function getPokemonByName(pokemonName: string) {
 	const abilities = response.data.abilities.map((element) => {
 		return element.ability.name;
 	});
-	//For each loop checking for language
-	/*
-	const flavourText = temp.data.flavor_text_entries.forEach((entry) => {
-		if (entry.language.name === 'en') {
-			console.log(entry.flavor_text.toString())
-			return entry.flavor_text;
-			console.log('pooppyyfarttt') 
-		}
-	});
-	*/
+	//For loop checking for language
 	var flavourText = '';
 	for (let index = 0; index < temp.data.flavor_text_entries.length; index++) {
 		if (temp.data.flavor_text_entries[index].language.name === 'en') {
