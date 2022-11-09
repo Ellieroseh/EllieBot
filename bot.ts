@@ -7,8 +7,15 @@ import Users from './schemas/Users';
 import Pokemons from './schemas/Pokemons';
 import MongoDbError from './classes/MongoDbError';
 import { v1 as uuidv1 } from 'uuid';
+import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
 
-//initialize discord client
+
+//Initialise unique names generator for animals
+const config: Config = {
+	dictionaries: [names]
+}
+
+//initialise discord client
 const client = new Client({
 	intents: [
 		Intents.FLAGS.GUILDS,
@@ -71,17 +78,17 @@ async function getPokemonByName(pokemonName: string) {
 				value: '\u200B',
 			},
 			{
-				name: 'Average weight:',
+				name: 'Average Weight:',
 				value: (response.data.weight / 10).toFixed(1) + 'kg',
 				inline: true,
 			},
 			{
-				name: 'Average height:',
+				name: 'Average Height:',
 				value: (response.data.height / 3.048).toFixed(1) + 'ft',
 				inline: true,
 			}
 		)
-		.setFooter('© EllieBot');
+		.setFooter('© PokéBot');
 	return pokemonInfoEmbed;
 }
 
@@ -96,6 +103,12 @@ async function getUserById(uid: number) {
 async function rollPokemon(ownerId: number) {
 	//Generates a unique id for the pokemon in the collection
 	const pokemonId = uuidv1();
+	//Generates pokemon nickname
+	const characterName: string = uniqueNamesGenerator(config);
+	console.log(characterName)
+	//Gets timestamp
+	const utcTimestamp = new Date().getTime();
+	console.log(utcTimestamp)
 	//RNG for a number inbetween 1-898 for the pokemon
 	const pokedexId = Math.floor(Math.random() * 897 + 1);
 	//Pokemon gender
@@ -180,8 +193,10 @@ async function rollPokemon(ownerId: number) {
 	const pokemonRollEmbed = new MessageEmbed()
 		//Setting colour of sidebar to match image
 		.setColor('#f0bf62')
-		//Setting title
-		.setTitle(response.data.name.split('-').join(' '))
+		//Setting title as pokemon nickname
+		.setTitle(characterName)
+		//Setting description as pokemon name
+		.setDescription(response.data.name.split('-').join(' '))
 		//Setting thumbnail image
 		.setThumbnail(pokemonImage)
 		//Fields which display information
@@ -216,6 +231,7 @@ async function rollPokemon(ownerId: number) {
 				value: pokemonAbility.ability.name.split('-').join(' '),
 				inline: true,
 			},
+			//Space
 			{
 				name: '\u200B',
 				value: '\u200B',
@@ -255,7 +271,8 @@ async function rollPokemon(ownerId: number) {
 				inline: true,
 			}
 		)
-		.setFooter('© EllieBot');
+		.setFooter('© PokéBot', pokemonImage)
+		.setTimestamp(utcTimestamp)
 	return pokemonRollEmbed;
 }
 
@@ -266,7 +283,7 @@ client.once('ready', () => {
 
 client.on('messageCreate', async (message) => {
 	if (message.author.bot) return;
-	//Splits the words into an array
+	//Splits the message words into an array
 	const words = message.content.toLowerCase().split(' ');
 	//checks the first word only
 	switch (words[0]) {
@@ -279,7 +296,7 @@ client.on('messageCreate', async (message) => {
 						const pokemonInfoEmbed = await getPokemonByName(words[2]);
 						message.reply({ embeds: [pokemonInfoEmbed] });
 					} catch (error) {
-						message.reply('Pokemon not found idiot');
+						message.reply('Pokemon not found');
 					}
 					break;
 				//when !pokemon collection is inputted
