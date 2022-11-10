@@ -51,6 +51,8 @@ async function getPokemonByName(pokemonName: string) {
 			break;
 		}
 	}
+	//Setting pokemon image variable
+	const pokemonOfficialArtwork = response.data.sprites.other['official-artwork'].front_default
 	//Creating discord embed for pokemon card
 	const pokemonInfoEmbed = new MessageEmbed()
 		//Setting colour of sidebar to match image
@@ -60,7 +62,7 @@ async function getPokemonByName(pokemonName: string) {
 		//Setting description to pokemon flavour text
 		.setDescription(flavourText.toString().replace('\f', ' '))
 		//Setting image
-		.setImage(response.data.sprites.other['official-artwork'].front_default)
+		.setImage(pokemonOfficialArtwork)
 		//Fields which display information
 		.addFields(
 			{
@@ -88,7 +90,7 @@ async function getPokemonByName(pokemonName: string) {
 				inline: true,
 			}
 		)
-		.setFooter('© PokéBot');
+		.setFooter('© PokéBot', pokemonOfficialArtwork);
 	return pokemonInfoEmbed;
 }
 
@@ -108,7 +110,6 @@ async function rollPokemon(ownerId: number) {
 	console.log(characterName)
 	//Gets timestamp
 	const utcTimestamp = new Date().getTime();
-	console.log(utcTimestamp)
 	//RNG for a number inbetween 1-898 for the pokemon
 	const pokedexId = Math.floor(Math.random() * 897 + 1);
 	//Pokemon gender
